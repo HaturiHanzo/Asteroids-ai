@@ -1,0 +1,24 @@
+.field {
+    display: inline-block;
+
+    margin: 2px;
+
+    color: white;
+    background: black;
+}
+
+.field-element_space {
+    color: black;
+}
+
+.field-element_wall {
+    color: orange;
+}
+
+.field-element_ship {
+    color: green;
+}
+
+.field-element_block {
+    color: red;
+}
