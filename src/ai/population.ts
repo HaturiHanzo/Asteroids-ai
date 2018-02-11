@@ -28,9 +28,7 @@ export class Population {
 
     generateNextPopulation(previousPopulationResult: Array<BotResults>): Array<AIBot> {
         const newPopulation: Array<AIBot> = [];
-        const extendedBotsInfo = this.createSelectionChancesArray(previousPopulationResult.sort((a, b) => {
-            return a.score < b.score ? -1 : 1;
-        }));
+        const extendedBotsInfo = this.createSelectionChancesArray(previousPopulationResult);
 
         const rouletteSectors = this.generateRouletteSectors(extendedBotsInfo);
 
@@ -38,7 +36,7 @@ export class Population {
             newPopulation.push(extendedBotsInfo[i].bot);
         }
 
-        for (let i = this.winnersSize; i < this.populationSize - 3; i++) {
+        for (let i = this.winnersSize; i < this.populationSize - 2; i++) {
             const parentAIndex = this.selectSector(rouletteSectors);
             let parentBIndex = this.selectSector(rouletteSectors);
             while (parentAIndex === parentBIndex) {
@@ -50,9 +48,6 @@ export class Population {
 
         // Cross over of 2 best in current population
         newPopulation.push(extendedBotsInfo[0].bot.crossOver(extendedBotsInfo[1].bot));
-
-        // Extra winner
-        newPopulation.push(extendedBotsInfo[0].bot);
 
         // Random new bot?
         newPopulation.push(AIBot.createBot());
@@ -92,12 +87,19 @@ export class Population {
     }
 
     private createSelectionChancesArray(botsInfo: Array<BotResults>): Array<ExtendedBotInfo> {
-        const sumScore = botsInfo.reduce(
+        const calculatedBotsInfo = botsInfo
+            .map(botResult => ({
+                score: botResult.score - Math.floor(botResult.movements / 10),
+                bot: botResult.bot
+            }))
+            .sort((a, b) => a.score < b.score ? -1 : 1);
+
+        const sumScore = calculatedBotsInfo.reduce(
             (result, item) => result += item.score,
             0
         );
 
-        return botsInfo.map((botInfo) => ({
+        return calculatedBotsInfo.map((botInfo) => ({
             score: botInfo.score,
             bot: botInfo.bot,
             vitalityChance: (botInfo.score / sumScore) * 100
