@@ -7,7 +7,7 @@ The main goal of this project is to create computer bot for playing simple aster
 ## Solution
 ### Neural network setup:
 #### Architecture:
-Perceptron with 3 input layers, 6 hidden layers and 2 output layers
+Perceptron with 3 neurons on input layer, 6 on hidden layer and 2 on output layer
 #### Input layer:
 1. The nearest asteroid width(I1)
 2. Offset to the nearest asteroid center(I2)
